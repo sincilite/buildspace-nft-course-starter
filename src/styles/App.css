@@ -28,6 +28,32 @@
   color: white;
 }
 
+.sub-text a {
+  color: #35aee2;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  border: 2px solid #35aee2;
+  border-radius: 5px;
+  padding: 5px 10px;
+  box-shadow: 3px 3px 0 #35aee2;
+  transition: all .05s ease-in!important;
+}
+
+.sub-text a:hover {
+  box-shadow: none;
+  transform: translate(2px,2px);
+}
+.new-nfts {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 5px;
+  margin-top: 20px;
+
+}
+
 .warning {
   background-color: orange;
   color: white;
@@ -39,6 +65,10 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.gradient-bg {
+  background: -webkit-linear-gradient(left, #60c657 30%, #35aee2 60%);
 }
 
 .cta-button {
@@ -68,13 +98,28 @@
 }
 
 .opensea-button {
-  background-color: rgb(32, 129, 226);
+  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  text-decoration: none;
+  padding: 2px 5px;
+  color: white;
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin-right: 15px;
+  border-radius: 3px;
+}
+
+.opensea-button:hover {
+  background: -webkit-linear-gradient(left, #ff6fdf, #a200d6);
 }
 
 .mint-count {
   color: white;
   font-size: 18px;
   font-weight: bold;
+}
+
+.body {
+  color: white;
 }
 
 .footer-container {
