@@ -5,9 +5,9 @@ import { ethers } from "ethers";
 import myEpicNft from './utils/MyEpicNft.json';
 
 // Constants
-const TWITTER_HANDLE = '_buildspace';
+const TWITTER_HANDLE = 'vanrooyen_m';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = '';
+const OPENSEA_LINK = 'https://testnets.opensea.io/collection/squarenft-f3lby047iq';
 const TOTAL_MINT_COUNT = 50;
 const CONTRACT_ADDRESS = "0x3D429c347714eAf436d6a8dcD21Bc2D9b913e13c";
 
@@ -130,6 +130,9 @@ const App = () => {
             </button>
           )}
         </div>
+        <section className="body">
+          <p>Checkout the full collection on <a href={OPENSEA_LINK} target="_blank" rel="noreferrer" className="opensea-button">OpenSea</a></p>
+        </section>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
           <a
@@ -137,7 +140,7 @@ const App = () => {
             href={TWITTER_LINK}
             target="_blank"
             rel="noreferrer"
-          >{`built on @${TWITTER_HANDLE}`}</a>
+          >{`built by @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
     </div>
