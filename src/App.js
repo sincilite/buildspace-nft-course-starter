@@ -8,14 +8,15 @@ import myEpicNft from './utils/MyEpicNft.json';
 const TWITTER_HANDLE = 'vanrooyen_m';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const OPENSEA_LINK = 'https://testnets.opensea.io/collection/squarenft-f3lby047iq';
-const TOTAL_MINT_COUNT = 50;
-const CONTRACT_ADDRESS = "0x3D429c347714eAf436d6a8dcD21Bc2D9b913e13c";
+const TOTAL_MINT_COUNT = 10;
+const CONTRACT_ADDRESS = "0x10f7cb1fEc36ced8a38F5763f34Cbc1b32d7C23A";
 
 const App = () => {
 
   const [currentAccount, setCurrentAccount] = useState('');
   const [receipt, setReceipt] = useState('');
   const [isMinting, setIsMinting] = useState(false);
+  const [mintCount, setMintCount] = useState(0);
   const { ethereum } = window;
 
   const checkIfWalletIsConnected = async () => {
@@ -34,6 +35,7 @@ const App = () => {
       const account = accounts[0];
       console.log('Found an authorised account: ', account);
       setCurrentAccount(account);
+      getNftCount();
       //setupEventListener();
     } else {
       console.log('No accounts found');
@@ -116,17 +118,40 @@ const App = () => {
 
         console.log("Going to pop wallet now to pay gas");
         let nftTxn = await connectedContract.makeAnEpicNFT();
-
+        setIsMinting(true);
         console.log("Mining... please wait");
         await nftTxn.wait();
 
         console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
+        getNftCount();
       } else {
         console.log("Ethereum object doesn't exist");
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const getNftCount = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
+
+        const nftCount = await connectedContract.tokenCount();
+        setMintCount(nftCount.toNumber());
+        console.log(nftCount.toNumber());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const remainingNfts = () => {
+    return TOTAL_MINT_COUNT - mintCount;
   }
 
   // Render Methods
@@ -148,6 +173,7 @@ const App = () => {
     connectedContract.on("NewEpicNFT", (from, tokenId) => {
       console.log(from, tokenId.toNumber());
       setReceipt(tokenId.toNumber());
+      setIsMinting(false);
     });
   }, [ethereum]);
 
@@ -159,14 +185,18 @@ const App = () => {
           <p className="sub-text">
             Each unique. Each beautiful. Discover your NFT today.
           </p>
-          {currentAccount === "" ? (
-            renderNotConnectedContainer()
-          ): (
-            <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-              {isMinting === false ?
-                "Mint NFT"
-              : "Minting..."}
-            </button>
+          { remainingNfts() > 0 ? (
+            currentAccount === "" ? (
+              renderNotConnectedContainer()
+            ): (
+              <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
+                {isMinting === false ?
+                  "Mint NFT"
+                : "Minting..."}
+              </button>
+            )
+          ) : (
+            <p className="sub-text">You've missed out!</p>
           )}
         </div>
         {receipt !== "" ? (
@@ -180,6 +210,16 @@ const App = () => {
                 Your new NFT is here!
               </a>
               </p>
+          </div>
+        ) : ''}
+        {mintCount ? (
+          <div className="receipt-container">
+            <p className="sub-text">
+              {`${mintCount} NFTs of this collection have been minted.`}
+            </p>
+            <p className="sub-text">
+              There are only {remainingNfts()} left
+            </p>
           </div>
         ) : ''}
         <section className="body">
